@@ -2,11 +2,12 @@ import React from "react";
 import moment from "moment";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import ReactPlayer from 'react-player/file'
 
-// import necessary components ^^^^^
+
 
 const Video = ({ d }) => {
-  // Calculate the difference between the date format 'YYYY-MM-DDTHH:MM:SSZ'  and the current date
+
   const date = d && d.publishTime;
   const diff = moment().diff(moment(date));
   const ago = moment.duration(diff).humanize();
@@ -14,48 +15,29 @@ const Video = ({ d }) => {
   // using navigation
   const navigate = useNavigate();
   const [hover, setHover] = useState(false);
+  const [muted, setMuted] = useState(true);
 
   const handleHoverOn = (e) => {
-    console.log(e);
-    // if (this.props.hover) {
-    //   this.setState({ hover: true });
-    // }
+    setHover(true);
   };
 
   const handleHoverOff = (e) => {
-    // if (this.props.hover) {
-    //   this.setState({ hover: false });
-    // }
+    setHover(false);
   };
-  // <Link
-  //   to={`/video/${d?.personalization_id}`}
-  //   className="card-box"
-  //   text="Click to play"
-  // >
-  {
-    /* <img
-        src={d?.thumbnail_url}
-        alt={d?.snippet?.title}
-        referrerPolicy="no-referrer"
-      /> */
-  }
+
   return (
-    <div
+    <Link
+      to={`/video/${d.personalization_id}`}
+      text="Click to Unmute"
       className="card-box"
       onMouseEnter={handleHoverOn}
-      onMouseLeave={handleHoverOff}
-    >
-      {hover ? (
-        <video controls width="250" autoPlay>
-          <source src={d.url} type="video/mp4" />
-        </video>
-      ) : (
-        <img
+      onMouseLeave={handleHoverOff}>
+      {hover ? <ReactPlayer url={d.url} playing width={350} height={196} controls muted={true} onClick={(e) => { e.preventDefault() }} />
+        : <img
           src={d?.thumbnail_url}
           alt={d?.snippet?.title}
           referrerPolicy="no-referrer"
-        />
-      )}
+        />}
 
       <div className="card-content">
         <img
@@ -78,7 +60,7 @@ const Video = ({ d }) => {
           <div className="date"> {ago} ago </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 
